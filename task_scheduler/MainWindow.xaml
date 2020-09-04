@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:smtx="clr-namespace:ShowMeTheXAML;assembly=ShowMeTheXAML"
+        xmlns:mdl="clr-namespace:task_scheduler.Model"
         mc:Ignorable="d"
         Title="Tasker"
         AutomationProperties.Name="{Binding Title, RelativeSource={RelativeSource Self}}"
@@ -30,11 +30,57 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type mdl:CalanderTimeModel}">
+                <Border Margin="3"
+                        Height="50"
+                        x:Name="bg"
+                        Width="50"
+                        Background="Green">
+                    <TextBlock Text="{Binding Day}"
+                               FontWeight="Bold"
+                               FontSize="15"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
+                </Border>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsPrevious}"
+                                 Value="true">
+                        <Setter TargetName="bg"
+                                Property="Background"
+                                Value="Gray" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsNext}"
+                                 Value="true">
+                        <Setter TargetName="bg"
+                                Property="Background"
+                                Value="Gray" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type mdl:DaysModel}">
+                <Border Margin="3"
+                        Height="50"
+                        x:Name="bg"
+                        Width="50"
+                        Background="OrangeRed">
+                    <TextBlock Text="{Binding Name}"
+                               FontWeight="Bold"
+                               FontSize="15"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
+                </Border>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type mdl:MonthModel}">
+                <TextBlock Text="{Binding Name}"
+                           FontWeight="Bold"
+                           FontSize="15"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <materialDesign:DialogHost Identifier="RootDialog"
-                               DialogTheme="Inherit"
-                               SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
+                               DialogTheme="Inherit">
         <materialDesign:DrawerHost x:Name="leftopen">
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <DockPanel MinWidth="220">
@@ -49,7 +95,7 @@
                     </ListBox>
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
-            <DockPanel>
+            <DockPanel x:Name="contentpanel">
                 <materialDesign:ColorZone Padding="16"
                                           materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                           Mode="PrimaryMid"
@@ -62,129 +108,58 @@
                                           IsChecked="{Binding Path=IsLeftDrawerOpen, ElementName=leftopen, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                           Click="Button_Click"
                                           AutomationProperties.Name="HamburgerToggleButton" />
-                            <!--<Button Margin="24,0,12,0"
-                                    ToolTip="Previous Item"
-                                    Command="{Binding MovePrevCommand}"
-                                    Content="{materialDesign:PackIcon Kind=ArrowLeft, Size=24}"
-                                    Style="{DynamicResource MaterialDesignToolButton}"
-                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
-                                    materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}" />
-                            <Button Margin="8,0,0,0"
-                                    ToolTip="Next Item"
-                                    Command="{Binding MoveNextCommand}"
-                                    Content="{materialDesign:PackIcon Kind=ArrowRight, Size=24}"
-                                    Style="{DynamicResource MaterialDesignToolButton}"
-                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
-                                    materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}" />-->
                         </StackPanel>
-                        <materialDesign:PopupBox DockPanel.Dock="Right"
-                                                 PlacementMode="BottomAndAlignRightEdges"
-                                                 StaysOpen="False">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal"
-                                            HorizontalAlignment="Center"
-                                            Margin="10">
-                                    <TextBlock Text="Light"
-                                               Margin="0 0 10 0" />
-                                    <ToggleButton x:Name="DarkModeToggleButton"
-                                                  IsChecked="True"
-                                                  Click="MenuDarkModeButton_Click" />
-                                    <TextBlock Text="Dark"
-                                               Margin="10 0 0 0" />
-                                </StackPanel>
-                                <Separator />
-                                <Button Content="Hello World" />
-                                <Button Content="Nice Popup"
-                                        Click="MenuPopupButton_OnClick" />
-                                <Button Content="Can't Touch This"
-                                        IsEnabled="False" />
-                                <Separator />
-                                <Button Content="Goodbye" />
-                            </StackPanel>
-                        </materialDesign:PopupBox>
+                        <Button Margin="8,0,0,0"
+                                ToolTip="Next Item"
+                                DockPanel.Dock="Right"
+                                Style="{DynamicResource MaterialDesignRaisedLightButton}"
+                                Content="{materialDesign:PackIcon Kind=Notifications, Size=24}" />
                         <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    FontSize="22"
                                    AutomationProperties.Name="Tasks">Task</TextBlock>
                     </DockPanel>
                 </materialDesign:ColorZone>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <WrapPanel Margin="0 0 8 8">
-                        <smtx:XamlDisplay Key="cards_3"
-                                          Margin="4 4 0 0"
-                                          VerticalContentAlignment="Top">
-                            <materialDesign:Card Background="#03a9f4"
-                                                 Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
-                                                 Padding="0"
-                                                 Width="200">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0"
-                                               Margin="16 16 16 4"
-                                               Style="{StaticResource MaterialDesignHeadline5TextBlock}">Call Jennifer</TextBlock>
-                                    <Separator Grid.Row="1"
-                                               Style="{StaticResource MaterialDesignLightSeparator}" />
-                                    <TextBlock Grid.Row="2"
-                                               Margin="16 0 16 8"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Left"
-                                               Style="{StaticResource MaterialDesignBody2TextBlock}">March 19, 2016</TextBlock>
-                                    <StackPanel Grid.Row="2"
-                                                Orientation="Horizontal"
-                                                Margin="16 0 16 8"
-                                                HorizontalAlignment="Right">
-                                        <Button HorizontalAlignment="Right"
-                                                Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                                Width="30"
-                                                Padding="2 0 2 0"
-                                                materialDesign:RippleAssist.IsCentered="True">
-                                            <materialDesign:PackIcon Kind="Phone" />
-                                        </Button>
-                                        <materialDesign:PopupBox HorizontalAlignment="Right"
-                                                                 Style="{StaticResource MaterialDesignToolForegroundPopupBox}"
-                                                                 Padding="2 0 2 0">
-                                            <StackPanel>
-                                                <Button Content="More" />
-                                                <Button Content="Options" />
-                                            </StackPanel>
-                                        </materialDesign:PopupBox>
-                                    </StackPanel>
-                                </Grid>
-                            </materialDesign:Card>
-                        </smtx:XamlDisplay>
-                        <smtx:XamlDisplay Key="cards_4"
-                                          Margin="4 4 0 0"
-                                          VerticalContentAlignment="Top">
-                            <materialDesign:Card Background="{DynamicResource PrimaryHueLightBrush}"
-                                                 Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
-                                                 Width="200"
-                                                 Padding="8">
-                                <TextBlock FontSize="16">Boring Text</TextBlock>
-                            </materialDesign:Card>
-                        </smtx:XamlDisplay>
-                        <smtx:XamlDisplay Key="cards_5"
-                                          Margin="4 4 0 0">
-                            <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}"
-                                                 Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
-                                                 Width="200"
-                                                 Padding="8"
-                                                 UniformCornerRadius="6">
-                                <TextBlock TextWrapping="Wrap">You can adjust the corner radius</TextBlock>
-                            </materialDesign:Card>
-                        </smtx:XamlDisplay>
-                    </WrapPanel>
-                    <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"
-                                             x:Name="MainSnackbar"
-                                             Grid.Row="1" />
-                </Grid>
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="cmbmonth"
+                                  Margin="5"
+                                  SelectionChanged="cmbmonth_SelectionChanged"
+                                  SelectedValuePath="Month"
+                                  SelectedIndex="0" />
+                        <ComboBox x:Name="cmbyear"
+                                  Margin="5"
+                                  Grid.Column="1"
+                                  SelectionChanged="cmbyear_SelectionChanged"
+                                  SelectedValuePath="Month" />
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <ItemsControl x:Name="days">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <ItemsControl x:Name="calander">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
             </DockPanel>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
