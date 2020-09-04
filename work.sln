@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task_scheduler", "task_scheduler\task_scheduler.csproj", "{04DFE34C-0A8D-4235-9662-A7D6E99D37FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04DFE34C-0A8D-4235-9662-A7D6E99D37FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04DFE34C-0A8D-4235-9662-A7D6E99D37FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04DFE34C-0A8D-4235-9662-A7D6E99D37FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04DFE34C-0A8D-4235-9662-A7D6E99D37FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26EC821C-B59B-4925-AEA9-5C53F98B89C3}
+	EndGlobalSection
+EndGlobal
