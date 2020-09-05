@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mdl="clr-namespace:task_scheduler.Model"
         mc:Ignorable="d"
         Title="Tasker"
         AutomationProperties.Name="{Binding Title, RelativeSource={RelativeSource Self}}"
@@ -30,53 +29,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type mdl:CalanderTimeModel}">
-                <Border Margin="3"
-                        Height="50"
-                        x:Name="bg"
-                        Width="50"
-                        Background="Green">
-                    <TextBlock Text="{Binding Day}"
-                               FontWeight="Bold"
-                               FontSize="15"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center" />
-                </Border>
-                <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding IsPrevious}"
-                                 Value="true">
-                        <Setter TargetName="bg"
-                                Property="Background"
-                                Value="Gray" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsNext}"
-                                 Value="true">
-                        <Setter TargetName="bg"
-                                Property="Background"
-                                Value="Gray" />
-                    </DataTrigger>
-                </DataTemplate.Triggers>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type mdl:DaysModel}">
-                <Border Margin="3"
-                        Height="50"
-                        x:Name="bg"
-                        Width="50"
-                        Background="OrangeRed">
-                    <TextBlock Text="{Binding Name}"
-                               FontWeight="Bold"
-                               FontSize="15"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center" />
-                </Border>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type mdl:MonthModel}">
-                <TextBlock Text="{Binding Name}"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <materialDesign:DialogHost Identifier="RootDialog"
@@ -120,45 +72,8 @@
                                    AutomationProperties.Name="Tasks">Task</TextBlock>
                     </DockPanel>
                 </materialDesign:ColorZone>
-                <DockPanel>
-                    <Grid DockPanel.Dock="Top">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="cmbmonth"
-                                  Margin="5"
-                                  SelectionChanged="cmbmonth_SelectionChanged"
-                                  SelectedValuePath="Month"
-                                  SelectedIndex="0" />
-                        <ComboBox x:Name="cmbyear"
-                                  Margin="5"
-                                  Grid.Column="1"
-                                  SelectionChanged="cmbyear_SelectionChanged"
-                                  SelectedValuePath="Month" />
-                    </Grid>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Vertical">
-                            <ItemsControl x:Name="days">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                            <ItemsControl x:Name="calander">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Grid>
+                <DockPanel x:Name="main">
+                    
                 </DockPanel>
             </DockPanel>
         </materialDesign:DrawerHost>
